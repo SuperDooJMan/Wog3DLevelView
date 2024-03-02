@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using WogView.Graphics;
 using WogView.World.Scene;
 using OpenTK.Windowing.Common;
+using System.Xml;
 
 namespace WogView;
 public partial class ViewWindow
@@ -12,6 +13,15 @@ public partial class ViewWindow
     protected override void OnLoad()
     {
         base.OnLoad();
+        
+        string levelname = "GoingUp";
+        if (File.Exists("cfg.xml")){
+            XmlDocument doc = new XmlDocument();
+            doc.Load("cfg.xml");
+            string? name = doc.GetElementsByTagName("level")[0]?.InnerText;
+            if (name != null)
+                levelname = name; // TODO: Fix all nullable refs.
+        }
 
         // OpenGl SetUp
         GL.DebugMessageCallback(DebugMessageDelegate, IntPtr.Zero);
@@ -28,7 +38,7 @@ public partial class ViewWindow
         _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
         CursorState = CursorState.Grabbed;
 
-        scene = Scene.LoadByName("UpperShaft");
+        scene = Scene.LoadByName(levelname);
         sceneRenderer = new SceneRenderer();
         sceneRenderer.SceneToDraw = scene;
     }
