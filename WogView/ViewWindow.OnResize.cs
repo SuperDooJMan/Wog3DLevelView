@@ -6,6 +6,8 @@ public partial class ViewWindow
 {
     protected override void OnResize(ResizeEventArgs e) {
         base.OnResize(e);
+        
+        Console.WriteLine($"Resized from:{ClientSize}, to:{e.Size}");
         int w = e.Width, h = e.Height;
         _camera.AspectRatio = w / h;
         GL.Viewport(0, 0, w, h);

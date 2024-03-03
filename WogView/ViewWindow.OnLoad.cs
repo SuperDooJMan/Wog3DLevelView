@@ -35,7 +35,7 @@ public partial class ViewWindow
 
         Shader.Default.SetInt("tex", 0);
         Shader.Default.Use();
-        _camera = new Camera(Vector3.UnitZ * 3, Size.X / Size.Y);
+        _camera = new Camera(Vector3.UnitZ * 100, Size.X / Size.Y);
         CursorState = CursorState.Grabbed;
 
         scene = Scene.LoadByName(levelname);

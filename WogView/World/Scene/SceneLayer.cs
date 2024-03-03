@@ -1,4 +1,6 @@
+using System.Net;
 using System.Xml;
+using OpenTK.Graphics.ES20;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using WogView.Graphics;
@@ -19,32 +21,68 @@ public class SceneLayer {
     }
 
     public SceneLayer(ResourceManager r_manager, XmlAttributeCollection attribs){
-        string? name = attribs.GetNamedItem("name")?.InnerText;
-        float x = float.Parse(attribs.GetNamedItem("x")?.InnerText);
-        float y = float.Parse(attribs.GetNamedItem("y")?.InnerText);
-        float d = float.Parse(attribs.GetNamedItem("depth")?.InnerText);
-        float rot = float.Parse(attribs.GetNamedItem("rotation")?.InnerText);
-        float s_x = float.Parse(attribs.GetNamedItem("scalex")?.InnerText);
-        float s_y = float.Parse(attribs.GetNamedItem("scaley")?.InnerText);
-
+        string? raw_text = attribs.GetNamedItem("name")?.InnerText;
+        if (raw_text != null)
+            Name = raw_text;
         
-        string? colorize = attribs.GetNamedItem("colorize")?.InnerText;
-        float r = 1, g = 1, b = 1;
-        if (colorize != null){
-            string[] rgb = colorize.Split(",");
+        Vector3 pos = Vector3.Zero; // Final pos
+
+        raw_text = attribs.GetNamedItem("x")?.InnerText;
+        if (raw_text != null)
+            pos.X = float.Parse(raw_text);
+        
+        raw_text = attribs.GetNamedItem("y")?.InnerText;
+        if (raw_text != null)
+            pos.Y = float.Parse(raw_text);
+
+        raw_text = attribs.GetNamedItem("depth")?.InnerText;
+        if (raw_text != null)
+            pos.Z = float.Parse(raw_text);
+
+        Position = pos; // When we done with position we can assign it to instance
+
+        raw_text = attribs.GetNamedItem("rotation")?.InnerText; // Rotation
+        if (raw_text != null)
+            Rotation = float.Parse(raw_text);
+        
+        Vector3 scale = Vector3.One; // Getting scale
+
+        raw_text = attribs.GetNamedItem("scalex")?.InnerText;
+        if (raw_text != null)
+            scale.X = float.Parse(raw_text);
+        
+        raw_text = attribs.GetNamedItem("scaley")?.InnerText;
+        if (raw_text != null)
+            scale.Y = float.Parse(raw_text);
+        
+        Scale = scale;
+
+        Vector4 color = Vector4.One; // Getting color
+
+        raw_text = attribs.GetNamedItem("colorize")?.InnerText;
+
+        if (raw_text != null){
+            string[] rgb = raw_text.Split(",");
             
-            r = float.Parse(rgb[0]) / 255;
-            g = float.Parse(rgb[1]) / 255;
-            b = float.Parse(rgb[2]) / 255;
+            color.X = float.Parse(rgb[0]) / 255;
+            color.Y = float.Parse(rgb[1]) / 255;
+            color.Z = float.Parse(rgb[2]) / 255;
         }
 
-        float a = float.Parse(attribs.GetNamedItem("alpha")?.InnerText);
-
-        Name = name != null ? name : "";
-        Position = new Vector3(x,y,d);
-        Rotation = rot;
-        Scale = new Vector3(s_x,s_y,1);
-        Color = new Vector4(r,g,b,a);
-        Image = r_manager.GetLocalImage(attribs.GetNamedItem("image")?.InnerText);
+        raw_text = attribs.GetNamedItem("alpha")?.InnerText;
+        if (raw_text != null)
+            color.W = float.Parse(raw_text);
+        
+        Color = color;
+        Image? i = null;
+        raw_text = attribs.GetNamedItem("image")?.InnerText;
+        
+        if (raw_text != null)
+            i = r_manager.GetLocalImage(raw_text);
+            if (i != null)
+                Image = i;
+            else
+                Image = Image.Missing;
+        
     }
 }

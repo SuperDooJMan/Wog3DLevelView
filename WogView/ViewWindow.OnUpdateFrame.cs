@@ -1,8 +1,8 @@
+using OpenTK.Graphics.ES11;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using WogView.Graphics;
-using WogView.World.Scene;
+
 
 namespace WogView;
 

@@ -9,6 +9,8 @@ public class Image
 
     public readonly int Width, Height;
 
+    public static readonly Image Missing = LoadFromFile("missing.png");
+
     public static Image LoadFromFile(string path)
     {
         int handle = GL.GenTexture();

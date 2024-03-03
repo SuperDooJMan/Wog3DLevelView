@@ -85,11 +85,8 @@ public class Camera
         return Matrix4.LookAt(Position, Position + _front, _up);
     }
 
-    public Matrix4 GetProjectionMatrix()
-    {
-        //return Matrix4.CreateOrthographic(1,1,0.001f,100f);
-        return Matrix4.CreatePerspectiveOffCenter(-AspectRatio, AspectRatio, -1, 1, 1f, 5000f);
-        //return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 100f);
+    public Matrix4 GetProjectionMatrix() {
+        return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 5000f);
     }
 
     // This function is going to update the direction vertices using some of the math learned in the web tutorials.
