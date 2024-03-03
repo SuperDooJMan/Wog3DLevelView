@@ -26,7 +26,7 @@ public partial class ViewWindow
         // OpenGl SetUp
         GL.DebugMessageCallback(DebugMessageDelegate, IntPtr.Zero);
         GL.Enable(EnableCap.DebugOutput);
-
+        
         //GL.Enable(EnableCap.DepthTest);
         // Blending
         GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
@@ -35,7 +35,7 @@ public partial class ViewWindow
 
         Shader.Default.SetInt("tex", 0);
         Shader.Default.Use();
-        _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+        _camera = new Camera(Vector3.UnitZ * 3, Size.X / Size.Y);
         CursorState = CursorState.Grabbed;
 
         scene = Scene.LoadByName(levelname);

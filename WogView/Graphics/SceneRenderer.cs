@@ -65,9 +65,9 @@ public class SceneRenderer
             if (image == null)
                 continue;
                 
-            Matrix4 model = Matrix4.CreateScale((image.Width / 100) * sceneLayer.Scale.X, (image.Height / 100) * sceneLayer.Scale.Y, 1.0f) *
+            Matrix4 model = Matrix4.CreateScale((image.Width) * sceneLayer.Scale.X, (image.Height) * sceneLayer.Scale.Y, 1.0f) *
                             Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(sceneLayer.Rotation)) *
-                            Matrix4.CreateTranslation(sceneLayer.Position / 108.5f);
+                            Matrix4.CreateTranslation(sceneLayer.Position);
 
             image.Use(TextureUnit.Texture0);
 

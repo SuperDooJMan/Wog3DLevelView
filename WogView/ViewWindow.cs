@@ -11,6 +11,7 @@ public partial class ViewWindow : GameWindow
     private Vector2 _lastPos;
 
     private double _time;
+    private int ratio;
 
     public ViewWindow() : base(GameWindowSettings.Default, new NativeWindowSettings()
     {
@@ -21,6 +22,7 @@ public partial class ViewWindow : GameWindow
         API = OpenTK.Windowing.Common.ContextAPI.OpenGL
     })
     {
+        ratio = ClientSize.X / ClientSize.Y;
         Console.WriteLine($"Window created! OpenGL: {APIVersion}");
         
     }

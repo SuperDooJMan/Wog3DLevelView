@@ -18,19 +18,22 @@ public partial class ViewWindow {
 
             var input = KeyboardState;
 
-            if (input.IsKeyDown(Keys.Escape))
+            if (input.IsKeyPressed(Keys.Escape))
             {
-                Close();
+                if(CursorState == CursorState.Grabbed){
+                    CursorState = CursorState.Normal;
+                }else{
+                    CursorState = CursorState.Grabbed;
+                }
             }
 
-            const float cameraSpeed = 1.5f;
-            const float sensitivity = 0.2f;
+            const float cameraSpeed = 500f;
+            const float sensitivity = 0.1f;
 
             if (input.IsKeyDown(Keys.W))
             {
                 _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
             }
-
             if (input.IsKeyDown(Keys.S))
             {
                 _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
@@ -51,6 +54,9 @@ public partial class ViewWindow {
             {
                 _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
             }
+
+            if(CursorState != CursorState.Grabbed)
+                return;
 
             // Get the mouse state
             var mouse = MouseState;
