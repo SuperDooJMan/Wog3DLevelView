@@ -45,8 +45,8 @@ public class Image : IDisposable
     public Image(int glHandle, int w, int h)
     {
         Handle = glHandle;
-        Width = (int)(w * Config.WORLD_SCALE);
-        Height = (int)(h * Config.WORLD_SCALE);
+        Width = w;
+        Height = h;
     }
 
 

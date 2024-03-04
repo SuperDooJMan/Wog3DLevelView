@@ -4,6 +4,7 @@ namespace WogView;
 public static class Config
 {
     public const float WORLD_SCALE = 0.01f; // Makes everything smaller
+    public const float CAM_SPEED = 5f;
     public static string LevelName { get; private set; } = "GoingUp";
     public static int Width = 800, Height = 600;
     // TODO: Serialization
@@ -19,10 +20,12 @@ public static class Config
                 return;
             }
 
-            string? name = doc.GetElementsByTagName("level")[0]?.Attributes?.GetNamedItem("name")?.InnerText;
+            string? name = doc.GetElementsByTagName("Level")[0]?.Attributes?.GetNamedItem("name")?.InnerText;
             if (name != null)
                 LevelName = name;
             
+            Console.WriteLine($"Going to: {name}");
+
             XmlAttributeCollection? collection = doc.GetElementsByTagName("WindowSize")[0]?.Attributes;
             if (collection != null){
                 var w = collection.GetNamedItem("width");

@@ -88,7 +88,6 @@ public class SceneChild {
                     break;
             }
         }
-        Console.WriteLine("Resource Loaded!");
     }
 
 

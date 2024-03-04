@@ -67,7 +67,7 @@ public class SceneRenderer
             
             var i_scale = child.Get3DScale();
 
-            Matrix4 model = Matrix4.CreateScale(image.Width * i_scale.X, image.Height * i_scale.Y, 1.0f) *
+            Matrix4 model = Matrix4.CreateScale(image.Width * i_scale.X * Config.WORLD_SCALE, image.Height * i_scale.Y * Config.WORLD_SCALE, i_scale.Z) *
                             Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(child.Rotation)) *
                             Matrix4.CreateTranslation(child.Get3DPosition());
 
