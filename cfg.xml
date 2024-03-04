@@ -1,4 +1,4 @@
 <Config>
-    <Level name="GoingUp"/>
-    <WindowSize width="1920" height="1080"/>
+    <Level name="MapWorldView"/>
+    <WindowSize width="1600" height="700"/>
 </Config>

@@ -61,7 +61,7 @@ public class SceneRenderer
     {
         if (SceneToDraw == null) return;
         foreach (SceneChild child in SceneToDraw.Children) {
-            Image? image = child.DrawableImage;
+            Image? image = child.LoadedImage.Image;
             if (image == null)
                 continue;
             

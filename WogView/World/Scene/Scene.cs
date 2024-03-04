@@ -19,7 +19,7 @@ public class Scene {
         doc.Load(path);
 
         var layers = doc.GetElementsByTagName("SceneLayer");
-        ResourceManager.LoadLocalResources(LEVELS_FOLDER + $"{name}/{name}.resrc");
+        ResourceManager.LoadResources(LEVELS_FOLDER + $"{name}/{name}.resrc");
 
         foreach (XmlNode layer in layers) {
             if (layer == null || layer?.Attributes == null)

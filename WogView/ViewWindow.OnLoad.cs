@@ -5,6 +5,7 @@ using WogView.Graphics;
 using WogView.World.Scene;
 using OpenTK.Windowing.Common;
 using System.Xml;
+using WogView.Resources;
 
 namespace WogView;
 public partial class ViewWindow
@@ -33,6 +34,7 @@ public partial class ViewWindow
         CursorState = CursorState.Grabbed;
 
         ClientSize = new Vector2i(Config.Width,Config.Height);
+        ResourceManager.LoadResources("game/properties/resources.xml");
         scene = Scene.LoadByName(Config.LevelName);
         sceneRenderer = new SceneRenderer();
         sceneRenderer.SceneToDraw = scene;

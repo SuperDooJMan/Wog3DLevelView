@@ -18,7 +18,7 @@ public class SceneChild {
     public byte G;
     public byte B;
     public string Image = "";
-    public Image DrawableImage = Graphics.Image.Missing;
+    public ImageResource LoadedImage;
     public SceneChild(){}
 
     public Vector4 Get4Color(){
@@ -77,10 +77,10 @@ public class SceneChild {
                     break;
                 case "image":
                     Image = value;
-                    var result = ResourceManager.GetImage(value);
+                    var result = (ImageResource)ResourceManager.GetResource("scene_" + Config.LevelName, value);
                     
                     if (result != null)
-                        DrawableImage = result;
+                        LoadedImage = result;
                     
                     break;
                 default:
