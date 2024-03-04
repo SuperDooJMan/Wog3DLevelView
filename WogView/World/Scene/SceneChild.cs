@@ -13,10 +13,10 @@ public class SceneChild {
     public float ScaleX;
     public float ScaleY;
     public float Rotation;
-    public float Alpha;
-    public byte R;
-    public byte G;
-    public byte B;
+    public float Alpha = 1f;
+    public byte R = 255;
+    public byte G = 255;
+    public byte B = 255;
     public string Image = "";
     public ImageResource LoadedImage;
     public SceneChild(){}

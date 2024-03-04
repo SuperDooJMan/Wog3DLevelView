@@ -18,6 +18,7 @@ public partial class ViewWindow
         Config.Load();
 
 
+        GL.ClearColor(0.05f,0.2f,0.05f,1f);
         // OpenGl SetUp
         GL.DebugMessageCallback(DebugMessageDelegate, IntPtr.Zero);
         GL.Enable(EnableCap.DebugOutput);
