@@ -3,13 +3,13 @@ using StbImageSharp;
 
 namespace WogView.Graphics;
 
-public class Image
+public class Image : IDisposable
 {
     public readonly int Handle;
 
     public readonly int Width, Height;
 
-    public static readonly Image Missing = LoadFromFile("missing.png");
+    public static readonly Image Missing = LoadFromFile("missing");
 
     public static Image LoadFromFile(string path)
     {
@@ -20,7 +20,7 @@ public class Image
         GL.BindTexture(TextureTarget.Texture2D, handle);
 
         StbImage.stbi_set_flip_vertically_on_load(1);
-        path = $"game/{path}.png";
+        path = $"{path}.png";
         using (Stream stream = File.OpenRead(path))
         {
             ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
@@ -37,6 +37,7 @@ public class Image
 
 
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        
 
         return new Image(handle, width, height);
     }
@@ -44,8 +45,8 @@ public class Image
     public Image(int glHandle, int w, int h)
     {
         Handle = glHandle;
-        Width = w;
-        Height = h;
+        Width = (int)(w * Config.WORLD_SCALE);
+        Height = (int)(h * Config.WORLD_SCALE);
     }
 
 
@@ -54,4 +55,11 @@ public class Image
         GL.ActiveTexture(unit);
         GL.BindTexture(TextureTarget.Texture2D, Handle);
     }
+
+    public void Dispose()
+    {
+        GL.BindTexture(TextureTarget.Texture2D, 0);
+        GL.DeleteTexture(Handle);
+    }
+
 }

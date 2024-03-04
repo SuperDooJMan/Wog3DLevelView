@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="missing.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="missing.png" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="cfg.xml" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 
   <ItemGroup>

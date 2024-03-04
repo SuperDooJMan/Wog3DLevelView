@@ -86,7 +86,7 @@ public class Camera
     }
 
     public Matrix4 GetProjectionMatrix() {
-        return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 5000f);
+        return Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 100f);
     }
 
     // This function is going to update the direction vertices using some of the math learned in the web tutorials.

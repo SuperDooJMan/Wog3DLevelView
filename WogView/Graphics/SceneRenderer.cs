@@ -60,19 +60,21 @@ public class SceneRenderer
     public void Draw()
     {
         if (SceneToDraw == null) return;
-        foreach (SceneLayer sceneLayer in SceneToDraw.Layers) {
-            Image? image = sceneLayer.Image;
+        foreach (SceneChild child in SceneToDraw.Children) {
+            Image? image = child.DrawableImage;
             if (image == null)
                 continue;
-                
-            Matrix4 model = Matrix4.CreateScale((image.Width) * sceneLayer.Scale.X, (image.Height) * sceneLayer.Scale.Y, 1.0f) *
-                            Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(sceneLayer.Rotation)) *
-                            Matrix4.CreateTranslation(sceneLayer.Position);
+            
+            var i_scale = child.Get3DScale();
+
+            Matrix4 model = Matrix4.CreateScale(image.Width * i_scale.X, image.Height * i_scale.Y, 1.0f) *
+                            Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(child.Rotation)) *
+                            Matrix4.CreateTranslation(child.Get3DPosition());
 
             image.Use(TextureUnit.Texture0);
 
             Shader.Default.SetMatrix4("model", model);
-            Shader.Default.SetVector4("color", sceneLayer.Color);
+            Shader.Default.SetVector4("color", child.Get4Color());
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
         }

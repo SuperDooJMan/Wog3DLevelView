@@ -27,7 +27,7 @@ public partial class ViewWindow {
                 }
             }
 
-            const float cameraSpeed = 500f;
+            const float cameraSpeed = 1f;
             const float sensitivity = 0.1f;
 
             if (input.IsKeyDown(Keys.W))

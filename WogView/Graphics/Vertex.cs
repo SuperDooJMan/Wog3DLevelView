@@ -1,15 +1,12 @@
-
-
+using System.Runtime.InteropServices;
 using OpenTK.Mathematics;
 
 namespace WogView.Graphics;
 
+[StructLayout(LayoutKind.Explicit)]
 struct Vertex{
+    [FieldOffset(0)]
     public Vector3 position;
-
+    [FieldOffset(0)]
     public Vector2 texCoord;
-    public Vertex(float x, float y, float z, float u, float v){
-        position = new Vector3(x, y, z);
-        texCoord = new Vector2(u, v);
-    }
 }
