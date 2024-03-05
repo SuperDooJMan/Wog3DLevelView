@@ -56,10 +56,21 @@ public static partial class ResourceManager
         }
     }
 
-    public static Resource GetResource(string group, string id){
-        Resource result = Resources[group].Find(r => r.Id == id);
+    public static Resource GetResource(string id){
+        Resource? result = null;
+        
+        foreach (List<Resource> res in Resources.Values) {
+            result = res.Find(r => r.Id == id);
+            if (result != null)
+                break;
+        }
+        
+        if (result == null)
+            throw new NullReferenceException();
+
         if (!result.Loaded)
             result.Load();
+
         return result;
     }
 

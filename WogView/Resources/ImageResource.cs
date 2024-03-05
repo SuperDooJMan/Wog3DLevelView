@@ -5,9 +5,8 @@ public class ImageResource : Resource
 {
     public Image Image { get; protected set; } = Image.Missing;
 
-    public ImageResource(string id, string path){
-        Id = id;
-        Path = path;
+    public ImageResource(string id, string path) : base(id,path){
+
     }
 
     public override void Load() {

@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using WogView.World.Scene;
@@ -60,21 +61,49 @@ public class SceneRenderer
     public void Draw()
     {
         if (SceneToDraw == null) return;
-        foreach (SceneChild child in SceneToDraw.Children) {
-            Image? image = child.LoadedImage.Image;
-            if (image == null)
-                continue;
-            
-            var i_scale = child.Get3DScale();
+        foreach (SceneLayer layer in SceneToDraw.Layers) {
+            if (layer.Depth >= -1) { // We Reached a middle, drawing stuff that have to be in the middle
+                foreach(Geometry geometry in SceneToDraw.Geometries){
+                    if (geometry is CompositeGeometry compose){
+                        DrawCollision(geometry);
+                        foreach (var item in compose.Geometries)
+                            DrawCollision(item);
+                    }else
+                        DrawCollision(geometry);
+                }
+            }
+            DrawLayer(layer);
+        }
+    }
 
-            Matrix4 model = Matrix4.CreateScale(image.Width * i_scale.X * Config.WORLD_SCALE, image.Height * i_scale.Y * Config.WORLD_SCALE, i_scale.Z) *
-                            Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(child.Rotation)) *
-                            Matrix4.CreateTranslation(child.Get3DPosition());
+    private void DrawLayer(SceneLayer layer){
+        Image image = layer.LoadedImage.Image;
+        Vector3 size = new Vector3(image.Width * layer.ScaleX * Config.WORLD_SCALE,image.Height * layer.ScaleY * Config.WORLD_SCALE, 1f);
+        
+        Matrix4 model = Matrix4.CreateScale(size) *
+                        Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(layer.Rotation)) *
+                        Matrix4.CreateTranslation(layer.GetPosition3D());
+        
+        Shader.Default.SetMatrix4("model", model);
+        Shader.Default.SetVector4("color", layer.GetColor4());
+        image.Use(TextureUnit.Texture0);
 
-            image.Use(TextureUnit.Texture0);
+        GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+    }
+
+    private void DrawCollision(Geometry geometry){
+        if(geometry.Image != null){
+            Image image = geometry.Image.Image;
+
+            Vector3 size = new Vector3(image.Width * geometry.ImageScale.X * Config.WORLD_SCALE,image.Height * geometry.ImageScale.Y * Config.WORLD_SCALE, 1f);
+
+            Matrix4 model = Matrix4.CreateScale(size) *
+                            Matrix4.CreateRotationZ(geometry.ImageRotation) * // Now its radians
+                            Matrix4.CreateTranslation(geometry.ImagePos);
 
             Shader.Default.SetMatrix4("model", model);
-            Shader.Default.SetVector4("color", child.Get4Color());
+            Shader.Default.SetVector4("color", Vector4.One);
+            image.Use(TextureUnit.Texture0);
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
         }
