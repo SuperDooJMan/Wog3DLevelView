@@ -9,10 +9,12 @@ public partial class ViewWindow
         
         Console.WriteLine($"Resized from:{ClientSize}, to:{e.Size}");
         int w = e.Width, h = e.Height;
+        
         if (w > h)
-            _camera.AspectRatio = w / (float)h;
+            Graphics.AspectRatio = w / (float)h;
         else
-            _camera.AspectRatio = h / (float)w;
+            Graphics.AspectRatio = h / (float)w;
+        
         GL.Viewport(0, 0, w, h);
     }
 }

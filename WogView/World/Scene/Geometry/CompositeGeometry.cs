@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace WogView.World.Scene;
+namespace WogView.World;
 
 public class CompositeGeometry : Geometry
 {
@@ -8,16 +8,18 @@ public class CompositeGeometry : Geometry
 
     public void AddChilds(XmlNodeList Nodes){
         foreach (XmlNode item in Nodes) {
+            if (item.Attributes == null)
+                continue;
             switch (item.Name)
             {
                 case "rectangle":
                     var rect = new Rectangle();
-                    rect.LoadFromAttributes(item.Attributes);
+                    rect.LoadFromXMLAttributes(item.Attributes);
                     Geometries.Add(rect);
                     break;
                 case "circle":
                     var circle = new Circle();
-                    circle.LoadFromAttributes(item.Attributes);
+                    circle.LoadFromXMLAttributes(item.Attributes);
                     Geometries.Add(circle);
                     break;
                 default:

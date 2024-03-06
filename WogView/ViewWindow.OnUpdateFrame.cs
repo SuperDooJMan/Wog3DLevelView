@@ -28,30 +28,29 @@ public partial class ViewWindow {
             }
             
             const float sensitivity = 0.1f;
-
             if (input.IsKeyDown(Keys.W))
             {
-                _camera.Position += _camera.Front * Config.CAM_SPEED * (float)e.Time; // Forward
+                Graphics.Camera.Position += Graphics.Camera.Front * Config.CAM_SPEED * (float)e.Time; // Forward
             }
             if (input.IsKeyDown(Keys.S))
             {
-                _camera.Position -= _camera.Front * Config.CAM_SPEED * (float)e.Time; // Backwards
+                Graphics.Camera.Position -= Graphics.Camera.Front * Config.CAM_SPEED * (float)e.Time; // Backwards
             }
             if (input.IsKeyDown(Keys.A))
             {
-                _camera.Position -= _camera.Right * Config.CAM_SPEED * (float)e.Time; // Left
+                Graphics.Camera.Position -= Graphics.Camera.Right * Config.CAM_SPEED * (float)e.Time; // Left
             }
             if (input.IsKeyDown(Keys.D))
             {
-                _camera.Position += _camera.Right * Config.CAM_SPEED * (float)e.Time; // Right
+                Graphics.Camera.Position += Graphics.Camera.Right * Config.CAM_SPEED * (float)e.Time; // Right
             }
             if (input.IsKeyDown(Keys.Space))
             {
-                _camera.Position += _camera.Up * Config.CAM_SPEED * (float)e.Time; // Up
+                Graphics.Camera.Position += Graphics.Camera.Up * Config.CAM_SPEED * (float)e.Time; // Up
             }
             if (input.IsKeyDown(Keys.LeftShift))
             {
-                _camera.Position -= _camera.Up * Config.CAM_SPEED * (float)e.Time; // Down
+                Graphics.Camera.Position -= Graphics.Camera.Up * Config.CAM_SPEED * (float)e.Time; // Down
             }
 
             if(CursorState != CursorState.Grabbed)
@@ -73,8 +72,8 @@ public partial class ViewWindow {
                 _lastPos = new Vector2(mouse.X, mouse.Y);
 
                 // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
-                _camera.Yaw += deltaX * sensitivity;
-                _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
+                Graphics.Camera.Yaw += deltaX * sensitivity;
+                Graphics.Camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
     }
 }

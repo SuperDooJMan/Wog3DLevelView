@@ -3,22 +3,20 @@ using System.Xml;
 using OpenTK.Mathematics;
 using WogView.Resources;
 
-namespace WogView.World.Scene;
-public abstract class Geometry{
-    public string Id;
+namespace WogView.World;
+public abstract class Geometry : SceneObject{
+    public string Id = "";
     public bool Static;
-    public string[] Tags;
-    public string Material;
-    public float X;
-    public float Y;
+    public string[] Tags = {};
+    public string Material = "";
     public float Rotation;
     public ImageResource? Image;
     public Vector3 ImagePos;
     public Vector3 ImageScale;
     public float ImageRotation;
 
-    public void LoadFromAttributes(XmlAttributeCollection xmlAttributes){
-        foreach (XmlAttribute attrib in xmlAttributes)
+    public override void LoadFromXMLAttributes(XmlAttributeCollection attributes){
+        foreach (XmlAttribute attrib in attributes)
         {
             switch (attrib.Name) {
                 case "id":
@@ -34,10 +32,10 @@ public abstract class Geometry{
                     Material = attrib.InnerText;
                     break;
                 case "x":
-                    X = float.Parse(attrib.InnerText) * Config.WORLD_SCALE;
+                    Position.X = float.Parse(attrib.InnerText);
                     break;
                 case "y":
-                    Y = float.Parse(attrib.InnerText) * Config.WORLD_SCALE;
+                    Position.Y = float.Parse(attrib.InnerText);
                     break;
                 case "rotation":
                     Rotation = float.Parse(attrib.InnerText);
@@ -47,7 +45,7 @@ public abstract class Geometry{
                     break;
                 case "imagepos":
                     string[] pos = attrib.InnerText.Split(",");
-                    ImagePos = new Vector3(float.Parse(pos[0]),float.Parse(pos[1]), 0f) * Config.WORLD_SCALE;
+                    ImagePos = new Vector3(float.Parse(pos[0]),float.Parse(pos[1]), 0f);
                     break;
                 case "imagescale":
                     string[] scale = attrib.InnerText.Split(",");
@@ -61,9 +59,9 @@ public abstract class Geometry{
                     break;
             }
         }
-    }
-    public Vector3 GetPosition3D(){
-        return new Vector3(X,Y,0f);
+        Position *= Config.WORLD_SCALE;
+        ImagePos *= Config.WORLD_SCALE;
+        Position.Z = 0.1f;
     }
 
     protected abstract void ParseUnknownAttrib(XmlAttribute attribute);

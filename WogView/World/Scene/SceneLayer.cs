@@ -4,35 +4,18 @@ using OpenTK.Mathematics;
 using WogView.Graphics;
 using WogView.Resources;
 
-namespace WogView.World.Scene;
+namespace WogView.World;
 
-public sealed class SceneLayer {
+public sealed class SceneLayer : SceneObject {
     public string Name = "";
     public string Id = "";
-    public float X;
-    public float Y;
-    public float Depth;
-    public float ScaleX;
-    public float ScaleY;
+    public Vector3 Scale = Vector3.One;
+    public Vector4 Color = Vector4.One;
     public float Rotation;
-    public float Alpha = 1f;
-    public ByteColor Colorize;
     public ImageResource LoadedImage;
 
-    public Vector4 GetColor4(){
-        return new Vector4(Colorize.R / 255f, Colorize.G / 255f, Colorize.B / 255f, Alpha);
-    }
-
-    public Vector3 GetScale3D(){
-        return new Vector3(ScaleX,ScaleY,1.0f);
-    }
-
-    public Vector3 GetPosition3D(){
-        return new Vector3(X,Y,Depth);
-    }
-
-    public void LoadFromAttributes(XmlAttributeCollection xmlAttributes){
-        foreach(XmlNode item in xmlAttributes){
+    public override void LoadFromXMLAttributes(XmlAttributeCollection attributes){
+        foreach(XmlNode item in attributes){
             if (item.InnerText == null){
                 Console.WriteLine($"Empty: {item.Name}");
                 continue;
@@ -47,31 +30,31 @@ public sealed class SceneLayer {
                     Id = value;
                     break;
                 case "x":
-                    X = float.Parse(value) * Config.WORLD_SCALE;
+                    Position.X = float.Parse(value);
                     break;
                 case "y":
-                    Y = float.Parse(value) * Config.WORLD_SCALE;
+                    Position.Y = float.Parse(value);
                     break;
                 case "depth":
-                    Depth = float.Parse(value) * Config.WORLD_SCALE; 
+                    Position.Z = float.Parse(value); 
                     break;
                 case "scalex":
-                    ScaleX = float.Parse(value);
+                    Scale.X = float.Parse(value);
                     break;
                 case "scaley":
-                    ScaleY = float.Parse(value);
+                    Scale.Y = float.Parse(value);
                     break;
                 case "rotation":
                     Rotation = float.Parse(value);
                     break;
                 case "alpha":
-                    Alpha = float.Parse(value);
+                    Color.W = float.Parse(value);
                     break;
                 case "colorize":
                     string[] rgb = value.Split(",");
-                    Colorize.R = byte.Parse(rgb[0]);
-                    Colorize.G = byte.Parse(rgb[1]);
-                    Colorize.B = byte.Parse(rgb[2]);
+                    Color.X = float.Parse(rgb[0]) / 255f;
+                    Color.Y = float.Parse(rgb[1]) / 255f;
+                    Color.Z = float.Parse(rgb[2]) / 255f;
                     break;
                 case "image":
                     var result = (ImageResource)ResourceManager.GetResource(value);
@@ -85,5 +68,6 @@ public sealed class SceneLayer {
                     break;
             }
         }
+        Position *= Config.WORLD_SCALE;
     }
 }

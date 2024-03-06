@@ -4,61 +4,111 @@ using OpenTK.Mathematics;
 using WogView.Graphics;
 using WogView.Resources;
 
-namespace WogView.World.Scene;
+namespace WogView.World;
 
 
 
 public class Scene {
+    private const string SceneLayer = "SceneLayer";
+    private const string CompositeGeometry = "compositegeom";
+    private const string Rectangle = "rectangle";
+    private const string Circle = "circle";
+
     public const string LEVELS_FOLDER = "game/res/levels/";
-    public List<SceneLayer> Layers = new List<SceneLayer>();
-    public List<Geometry> Geometries = new List<Geometry>();
-    public static Scene LoadByName(string name){
-        Scene result = new Scene();
+    public List<SceneObject> SceneObjects = new List<SceneObject>();
+    
+    public Scene(){
+
+    }
+
+    public void Load(string level_name){
+        if(!Directory.Exists(LEVELS_FOLDER + level_name)){
+            throw new DirectoryNotFoundException();
+        }
+        string level_path = LEVELS_FOLDER + $"{level_name}/{level_name}";
+
         XmlDocument doc = new XmlDocument();
+        doc.Load(level_path + ".scene");
+
+        ResourceManager.LoadResources(level_path + ".resrc");
         
-        string path = LEVELS_FOLDER + $"{name}/{name}.scene";
-        doc.Load(path);
+        if (doc.DocumentElement == null){
+            throw new Exception("Level is empty!");
+        }
 
-        var layers = doc.GetElementsByTagName("SceneLayer");
-        ResourceManager.LoadResources(LEVELS_FOLDER + $"{name}/{name}.resrc");
-
-        foreach (XmlNode item in doc.DocumentElement.ChildNodes)
-        {
-            switch (item.Name)
+        foreach (XmlNode node in doc.DocumentElement.ChildNodes) {
+            if (node.Attributes == null || node is XmlComment)
+                continue;
+            switch (node.Name)
             {
-                case "SceneLayer":
+                case SceneLayer:
                     var layer = new SceneLayer();
-                    layer.LoadFromAttributes(item.Attributes);
-                    result.Layers.Add(layer);
+                    layer.LoadFromXMLAttributes(node.Attributes);
+                    SceneObjects.Add(layer);
                     break;
-                case "compositegeom":
-                    var compost = new CompositeGeometry();
-                    compost.LoadFromAttributes(item.Attributes);
-                    compost.AddChilds(item.ChildNodes);
-                    result.Geometries.Add(compost);
+                case CompositeGeometry:
+                    var compose = new CompositeGeometry();
+                    compose.LoadFromXMLAttributes(node.Attributes);
+                    compose.AddChilds(node.ChildNodes);
+                    SceneObjects.Add(compose);
                     break;
-                case "rectangle":
+                case Rectangle:
                     var rect = new Rectangle();
-                    rect.LoadFromAttributes(item.Attributes);
-                    result.Geometries.Add(rect);
+                    rect.LoadFromXMLAttributes(node.Attributes);
+                    SceneObjects.Add(rect);
                     break;
-                case "circle":
+                case Circle:
                     var circle = new Circle();
-                    circle.LoadFromAttributes(item.Attributes);
-                    result.Geometries.Add(circle);
+                    circle.LoadFromXMLAttributes(node.Attributes);
+                    SceneObjects.Add(circle);
                     break;
                 default:
                     break;
             }
-            
         }
-
-        result.Layers = result.Layers.OrderBy(l=>l.Depth).ToList();
-
-        return result;
+        SceneObjects = SceneObjects.OrderBy(o=>o.Position.Z).ToList();
     }
 
-    public Scene(){
+    public void Draw(Graphics.Graphics graphics){
+        foreach (SceneObject obj in SceneObjects) {
+            Image? image = null;
+            Vector3 position = Vector3.Zero;
+            Vector3 scale = Vector3.One;
+            Vector4 color = Vector4.One;
+            float rotation = 0f;
 
+            if (obj is SceneLayer layer){
+                image = layer.LoadedImage.Image;
+                if(image == null)
+                    continue;
+                position = layer.Position;
+                scale = layer.Scale;
+                color = layer.Color;
+                rotation = MathHelper.DegreesToRadians(layer.Rotation); 
+            } else if (obj is CompositeGeometry composite){
+                image = composite.Image?.Image;
+                position = composite.ImagePos;
+                scale = composite.ImageScale;
+                rotation = composite.ImageRotation;
+
+                foreach (Geometry geom in composite.Geometries) {
+                    if (geom.Image == null)
+                        continue;
+                    graphics.DrawImage(geom.Image.Image, geom.ImagePos,geom.ImageScale,Vector4.One,geom.ImageRotation);
+                }
+                if(image == null)
+                    continue;
+            } else if (obj is Geometry geom){
+                image = geom.Image?.Image;
+                if(image == null)
+                    continue;
+                position = geom.ImagePos;
+                scale = geom.ImageScale;
+                rotation = geom.ImageRotation;
+            }
+
+            if (image != null)
+                graphics.DrawImage(image, position, scale, color, rotation);
+        }
     }
 }

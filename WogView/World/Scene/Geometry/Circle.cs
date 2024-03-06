@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace WogView.World.Scene;
+namespace WogView.World;
 
 public class Circle : Geometry
 {
