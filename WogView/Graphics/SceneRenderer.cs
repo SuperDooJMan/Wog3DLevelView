@@ -61,16 +61,18 @@ public class SceneRenderer
     public void Draw()
     {
         if (SceneToDraw == null) return;
+        bool geometry_drawn = false;
         foreach (SceneLayer layer in SceneToDraw.Layers) {
-            if (layer.Depth >= -1) { // We Reached a middle, drawing stuff that have to be in the middle
+            if (layer.Depth >= 0 && !geometry_drawn) { // We Reached a middle, drawing stuff that have to be in the middle
                 foreach(Geometry geometry in SceneToDraw.Geometries){
                     if (geometry is CompositeGeometry compose){
-                        DrawCollision(geometry);
+                        DrawGeometryImage(geometry);
                         foreach (var item in compose.Geometries)
-                            DrawCollision(item);
+                            DrawGeometryImage(item);
                     }else
-                        DrawCollision(geometry);
+                        DrawGeometryImage(geometry);
                 }
+                geometry_drawn = true;
             }
             DrawLayer(layer);
         }
@@ -91,7 +93,7 @@ public class SceneRenderer
         GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
     }
 
-    private void DrawCollision(Geometry geometry){
+    private void DrawGeometryImage(Geometry geometry){
         if(geometry.Image != null){
             Image image = geometry.Image.Image;
 
