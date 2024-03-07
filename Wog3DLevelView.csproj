@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Include="missing.png" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="white32.png" CopyToOutputDirectory="PreserveNewest"/>
     <None Include="cfg.xml" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 

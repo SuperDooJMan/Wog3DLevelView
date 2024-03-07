@@ -13,6 +13,7 @@ public class Scene {
     private const string CompositeGeometry = "compositegeom";
     private const string Rectangle = "rectangle";
     private const string Circle = "circle";
+    private const string LinearForceField = "linearforcefield";
 
     public const string LEVELS_FOLDER = "game/res/levels/";
     public List<SceneObject> SceneObjects = new List<SceneObject>();
@@ -62,6 +63,11 @@ public class Scene {
                     circle.LoadFromXMLAttributes(node.Attributes);
                     SceneObjects.Add(circle);
                     break;
+                case LinearForceField:
+                    var lff = new LinearForceField();
+                    lff.LoadFromXMLAttributes(node.Attributes);
+                    SceneObjects.Add(lff);
+                    break;
                 default:
                     break;
             }
@@ -77,7 +83,7 @@ public class Scene {
             Vector4 color = Vector4.One;
             float rotation = 0f;
 
-            if (obj is SceneLayer layer){
+            if (obj is SceneLayer layer){// Re do
                 image = layer.LoadedImage.Image;
                 if(image == null)
                     continue;
@@ -105,6 +111,11 @@ public class Scene {
                 position = geom.ImagePos;
                 scale = geom.ImageScale;
                 rotation = geom.ImageRotation;
+            } else if (obj is LinearForceField lff){
+                if (lff.IsWater){
+                    graphics.DrawColor(lff.Position, lff.Size, lff.Color, 0f);
+                    continue;
+                }
             }
 
             if (image != null)

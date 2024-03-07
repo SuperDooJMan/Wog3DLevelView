@@ -29,6 +29,18 @@ public class Graphics : IDisposable
         Shader.SetMatrix4("view", Camera.GetViewMatrix());
         Shader.SetMatrix4("projection", Camera.GetProjectionMatrix());
     }
+    public void DrawColor(Vector3 position, Vector3 size, Vector4 color, float rotation = 0f){
+        Matrix4 model = Matrix4.CreateScale(size * Config.WORLD_SCALE) *
+                        Matrix4.CreateRotationZ(rotation) *
+                        Matrix4.CreateTranslation(position);
+        
+        Shader.SetMatrix4("model", model);
+        Shader.SetVector4("color", color);
+        Image.White32.Use(TextureUnit.Texture0);
+
+        _imageQuad.Draw();
+    }
+
     public void DrawImage(Image image, Vector3 position, Vector3 scale, Vector4 color, float rotation = 0f){
         Vector3 size = new Vector3(image.Width * scale.X,image.Height * scale.Y, 1.0f);
         Matrix4 model = Matrix4.CreateScale(size * Config.WORLD_SCALE) *

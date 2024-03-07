@@ -18,12 +18,17 @@ public class Mesh : IDisposable{
         1, 2, 3
     };
     public static readonly Mesh QuadMesh = new Mesh(_quad_vertices, _quad_indices);
-    private int _EBO;
-    private int _VBO;
     private int _VAO;
+    private float[] _vertices;
+    private int _VBO;
+    private uint[] _indices;
+    private int _EBO;
     private int _indices_count;
 
     public Mesh(float[] vertices, uint [] indices){
+        _vertices = vertices;
+        _indices = indices;
+
         _VAO = GL.GenVertexArray();
         GL.BindVertexArray(_VAO);
 
@@ -49,18 +54,27 @@ public class Mesh : IDisposable{
 
     }
 
+    /// <summary>
+    /// Draws the mesh on the screen with transform applied by current shader
+    /// </summary>
     public void Draw(){
         Bind();
         GL.DrawElements(PrimitiveType.Triangles, _indices_count, DrawElementsType.UnsignedInt, 0);
         //Unbind();
     }
 
+    /// <summary>
+    /// Binds mesh before drawing
+    /// </summary>
     public void Bind(){
         GL.BindVertexArray(_VAO);
         GL.BindBuffer(BufferTarget.ArrayBuffer, _VBO);
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, _EBO);
     }
 
+    /// <summary>
+    /// Unbinds any mesh
+    /// </summary>
     public static void Unbind(){
         GL.BindVertexArray(0);
         GL.BindBuffer(BufferTarget.ArrayBuffer, 0);

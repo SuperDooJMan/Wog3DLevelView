@@ -10,6 +10,7 @@ public class Image : IDisposable
     public readonly int Width, Height;
 
     public static readonly Image Missing = LoadFromFile("missing");
+    public static readonly Image White32 = LoadFromFile("white32");
 
     public static Image LoadFromFile(string path)
     {
@@ -31,10 +32,10 @@ public class Image : IDisposable
 
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+        
 
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
-
 
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         
